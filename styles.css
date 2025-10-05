@@ -1,0 +1,92 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f9f9f9;
+  margin: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+#newBookBtn {
+  margin: 10px;
+  padding: 10px 15px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#newBookBtn:hover {
+  background: #45a049;
+}
+
+/* BONUS: Let's add some style to the dialog itself! */
+dialog {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+#bookForm {
+  margin: 15px auto;
+  padding: 15px;
+  background: #fff;
+  /* We don't need this border anymore since the dialog has one */
+  /* border: 1px solid #ddd; */
+  border-radius: 6px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#bookForm input,
+#bookForm button {
+  padding: 8px;
+}
+
+/* <-- FIX: Changed #library to #library-container to match the HTML id */
+#library-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+.book-card {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  width: 200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.book-card h3 {
+  margin: 5px 0;
+}
+
+.book-card button {
+  margin: 5px;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* <-- FIX: Changed .toggle-read to .toggle-read-btn to match the JS class */
+.toggle-read-btn {
+  background: #2196F3;
+  color: white;
+}
+
+/* <-- FIX: Changed .remove-book to .remove-btn to match the JS class */
+.remove-btn {
+  background: #f44336;
+  color: white;
+}

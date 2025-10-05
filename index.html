@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Library</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>📚 My Library</h1>
+  
+  <!-- Where books will show -->
+  <div id="library-container"></div>
+  <button id="newBookBtn">➕ New Book</button>
+  
+  <!-- Form (hidden by default) -->
+   <dialog id="bookFormDialog">
+  <!-- 
+    FIX: Removed style="display:none;".
+    The <dialog> element handles its own visibility.
+    The form inside should always be ready to be shown.
+  -->
+  <form id="bookForm">
+    <input type="text" id="title" placeholder="Title" required>
+    <input type="text" id="author" placeholder="Author" required>
+    <input type="number" id="pages" placeholder="Pages" required>
+    <label>
+      <input type="checkbox" id="read"> Read?
+    </label>
+    <button type="submit">Add Book</button>
+  </form>
+</dialog>
+  
+  <script src="script.js"></script>
+</body>
+</html>
