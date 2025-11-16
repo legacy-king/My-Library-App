@@ -1,110 +1,140 @@
-// FIX: Use 'let' because we will re-assign this array when we filter it.
-// Also, using lowercase 'myLibrary' is a more common convention.
-let myLibrary = [];
+// ==================== CLASSES ====================
 
-// FIX: The class and function definitions must come BEFORE we try to use them.
+/**
+ * Book Class: The blueprint for a book object.
+ * This remains largely the same, as it was already a class.
+ */
 class Book {
-  constructor(title, author, pages, read) {
+  constructor(title, author, pages, isRead) {
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.read = read;
+    this.isRead = isRead;
     this.id = crypto.randomUUID();
   }
 
   toggleReadStatus() {
-    this.read = !this.read;
+    this.isRead = !this.isRead;
   }
 }
 
-function addBookToLibrary(title, author, pages, read) {
-  const newBook = new Book(title, author, pages, read);
-  // FIX: Use the consistently named 'myLibrary'
-  myLibrary.push(newBook);
-  displayBooks();
+/**
+ * Library Class: Manages the collection of books (the data).
+ * This replaces the simple `myLibrary` array and its associated functions.
+ */
+class Library {
+  constructor() {
+    this.books = [];
+  }
+
+  addBook(title, author, pages, isRead) {
+    const newBook = new Book(title, author, pages, isRead);
+    this.books.push(newBook);
+  }
+
+  removeBook(bookId) {
+    this.books = this.books.filter(book => book.id !== bookId);
+  }
+
+  findBookById(bookId) {
+    return this.books.find(book => book.id === bookId);
+  }
 }
 
-function displayBooks() {
-  const libraryContainer = document.getElementById("library-container");
-  libraryContainer.innerHTML = "";
+/**
+ * DisplayController Class: Manages everything the user sees.
+ * It takes a `library` instance in its constructor (Dependency Injection!).
+ * This replaces the old DisplayController IIFE.
+ */
+class DisplayController {
+  constructor(library) {
+    this.library = library;
+    this.libraryContainer = document.getElementById('library-container');
+    this.bookFormDialog = document.getElementById('bookFormDialog');
+    this.bookForm = document.getElementById('bookForm');
+    this.newBookBtn = document.getElementById('newBookBtn');
 
-  // FIX: Use the consistently named 'myLibrary'
-  myLibrary.forEach(book => {
-    const bookCard = document.createElement('div');
-    bookCard.classList.add('book-card');
-    bookCard.dataset.id = book.id;
+    this.bindEvents();
+  }
 
-    // FIX: Added the missing closing quote for the 'remove-btn' class.
-    bookCard.innerHTML = `
-       <h3>${book.title}</h3>
-       <p>by ${book.author}</p>
-       <p>${book.pages} Pages</p>
-       <p>status: ${book.read ? "Read" : "Not Read Yet"}</p>
-       <button class="toggle-read-btn">Toggle Read</button>
-       <button class="remove-btn">Remove</button>
-       `;
-    libraryContainer.appendChild(bookCard);
-  });
-}
+  // A method to set up all event listeners
+  bindEvents() {
+    this.newBookBtn.addEventListener('click', () => this.bookFormDialog.showModal());
 
-const newBookBtn = document.getElementById("newBookBtn");
-const bookFormDialog = document.getElementById("bookFormDialog");
-const bookForm = document.getElementById("bookForm");
+    this.bookForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      this.handleFormSubmit();
+    });
 
-newBookBtn.addEventListener('click', () => {
-  // FIX: Use the correct case for the variable name.
-  bookFormDialog.showModal();
-});
+    this.libraryContainer.addEventListener('click', (event) => this.handleBoardClick(event));
+  }
 
-bookForm.addEventListener('submit', (event) => {
-  event.preventDefault();
+  // Renders the entire library to the page
+  render() {
+    this.libraryContainer.innerHTML = '';
 
-  const title = document.getElementById('title').value;
-  const author = document.getElementById('author').value;
-  const pages = document.getElementById('pages').value;
-  const isRead = document.getElementById('read').checked;
+    this.library.books.forEach(book => {
+      const bookCard = document.createElement('div');
+      bookCard.classList.add('book-card');
+      bookCard.dataset.id = book.id;
 
-  addBookToLibrary(title, author, pages, isRead);
+      bookCard.innerHTML = `
+        <h3>${book.title}</h3>
+        <p>by ${book.author}</p>
+        <p>${book.pages} Pages</p>
+        <p>Status: ${book.isRead ? "Read" : "Not Read Yet"}</p>
+        <button class="toggle-read-btn">Toggle Read</button>
+        <button class="remove-btn">Remove</button>
+      `;
+      this.libraryContainer.appendChild(bookCard);
+    });
+  }
 
-  bookForm.reset();
-  // FIX: Use the .close() method to close a dialog.
-  bookFormDialog.close();
-});
+  handleFormSubmit() {
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+    const pages = document.getElementById('pages').value;
+    const isRead = document.getElementById('read').checked;
 
-const libraryContainer = document.getElementById('library-container');
+    this.library.addBook(title, author, pages, isRead);
+    this.render();
 
-libraryContainer.addEventListener('click', (event) => {
+    this.bookForm.reset();
+    this.bookFormDialog.close();
+  }
 
-  // FIX: 'remove-btn' needs to be a string in quotes.
-  if (event.target.classList.contains('remove-btn')) {
+  handleBoardClick(event) {
     const bookCard = event.target.closest('.book-card');
-    const bookIdToRemove = bookCard.dataset.id;
+    if (!bookCard) return;
 
-    // FIX: Use the correctly named 'myLibrary' and provide the correct
-    // function syntax for .filter().
-    myLibrary = myLibrary.filter(book => book.id !== bookIdToRemove);
+    const bookId = bookCard.dataset.id;
+    const book = this.library.findBookById(bookId);
 
-    displayBooks();
+    if (event.target.classList.contains('remove-btn')) {
+      this.library.removeBook(bookId);
+      this.render();
+    }
+
+    if (event.target.classList.contains('toggle-read-btn')) {
+      book.toggleReadStatus();
+      this.render(); // Re-render to show the updated status
+    }
   }
+}
 
-  if (event.target.classList.contains('toggle-read-btn')) {
-    const bookCard = event.target.closest('.book-card');
-    const bookIdToToggle = bookCard.dataset.id;
 
-    // FIX: Use the correctly named 'myLibrary'.
-    const bookToToggle = myLibrary.find(book => book.id === bookIdToToggle);
+// ==================== INITIALIZE APP ====================
 
-    // Use the function we built into our Book class!
-    bookToToggle.toggleReadStatus();
+// The main application logic is now much simpler.
+// We create instances of our classes and tie them together.
+document.addEventListener('DOMContentLoaded', () => {
+  const myLibrary = new Library();
+  const display = new DisplayController(myLibrary);
 
-    // Update the display
-    displayBooks();
-  }
+  // Add some initial books for testing
+  myLibrary.addBook('The Hobbit', 'J.R.R. Tolkien', 310, false);
+  myLibrary.addBook('1984', 'George Orwell', 328, true);
+
+  // Initial render
+  display.render();
 });
-
-// FIX: Move the test calls to the very end, after everything is defined.
-// Manually add a couple of books for testing
-addBookToLibrary('The Hobbit', 'J.R.R. Tolkien', 310, false);
-addBookToLibrary('1984', 'George Orwell', 328, true);
-
-
