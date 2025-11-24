@@ -9,7 +9,7 @@ A simple web application built with vanilla HTML, CSS, and JavaScript to manage 
 - Mark a book as 'Read' or 'Not Read Yet' with a toggle button.
 - Remove books from the library.
 - All data is stored in a JavaScript array and the display is dynamically updated.
-- ![Library UI](My Libray-mozilla Firefox 11_25_2025 12_26_49 AM.png) and ![Mobile View](Screenshot_20251125-003432[1].png).
+- ![Library UI](My Library-mozilla Firefox 11_25_2025 12_26_49 AM.png) and ![Mobile View](Screenshot_20251125-003432[1].png).
 
 ## Lessons Learned
 
