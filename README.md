@@ -20,7 +20,8 @@ This project was a great exercise in:
 - Using `data-*` attributes to link DOM elements to their corresponding JavaScript objects.
 - The core Git workflow: `add`, `commit`, `push`.
 
-
+#Live Demo
+[Try it live here] (https://inquisitive-tiramisu-c07ac8.netlify.app)
 
 1. Clone this repository to your local machine.
 2. Open the `index.html` file in your web browser.
